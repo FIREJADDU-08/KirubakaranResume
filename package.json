@@ -24,6 +24,7 @@
     "@emailjs/browser": "^4.4.1",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "pnpm": "^10.24.0",
     "react-icons": "^5.5.0",
     "zod": "^3.25.76"
   },
