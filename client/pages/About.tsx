@@ -1,531 +1,219 @@
-import { useTheme } from "@/context/ThemeContext";
-import { ExternalLink, Github, Smartphone, Globe, Store, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+interface AboutProps {
+  isDark: boolean;
+}
 
-// Your JSON data
-const portfolioData = {
-  "title": {
-    "locales": {
-      "en": {
-        "title_short": "Portfolio",
-        "title_short_nav": "Portfolio",
-        "title_long_prefix": "Take a look at",
-        "title_long": "My Portfolio"
-      }
-    }
-  },
-  "articles": [
+export default function About({ isDark }: AboutProps) {
+  const timeline = [
     {
-      "id": 1,
-      "component": "ArticlePortfolio",
-      "locales": {
-        "en": {
-          "category_all": "All",
-          "category_apps": "Apps",
-          "category_web": "Web"
-        }
-      },
-      "settings": {
-        "categorize_by": [
-          "category_apps",
-          "category_web"
-        ],
-        "order_items_by": "id",
-        "order_items_sort": "asc"
-      },
-      "items": [
-        {
-          "id": 2,
-          "categoryId": "category_apps",
-          "img": "images/pictures/portfolio-project-logo-7.png",
-          "faIcon": "",
-          "faIconColors": { "bg": "", "fill": "" },
-          "preview": {
-            "links": [
-              {
-                "href": "https://play.google.com/store/apps/details?id=com.bmg.bmgscheme",
-                "tooltipString": "see_on_google_play",
-                "faIcon": "fa-brands fa-google-play"
-              }
-            ],
-            "screenshots": [],
-            "screenshotsAspectRatio": "",
-            "youtubeVideo": ""
-          },
-          "locales": {
-            "en": {
-              "title": "Digi Scheme",
-              "text": "A customer-centric gold savings and scheme management app, helping users track installments, payments, maturity dates, and personalized gold plans.",
-              "tags": ["Flutter", "Schemes", "Customer App"]
-            }
-          }
-        },
-        {
-          "id": 3,
-          "categoryId": "category_apps",
-          "img": "images/pictures/portfolio-project-logo-6.png",
-          "faIcon": "",
-          "faIconColors": { "bg": "", "fill": "" },
-          "preview": {
-            "links": [
-              {
-                "href": "https://play.google.com/store/apps/details?id=com.akjgold.akj",
-                "tooltipString": "see_on_google_play",
-                "faIcon": "fa-brands fa-google-play"
-              }
-            ],
-            "screenshots": [],
-            "screenshotsAspectRatio": "",
-            "youtubeVideo": ""
-          },
-          "locales": {
-            "en": {
-              "title": "AKJ Mini Gold",
-              "text": "A lightweight gold investment companion app designed for fast scheme tracking, installment notifications, and user-friendly account management.",
-              "tags": ["React Native", "Gold", "Schemes"]
-            }
-          }
-        },
-        {
-          "id": 4,
-          "categoryId": "category_web",
-          "img": "images/pictures/portfolio-project-logo-1.png",
-          "faIcon": "",
-          "faIconColors": { "bg": "", "fill": "" },
-          "preview": {
-            "links": [
-              {
-                "href": "https://bmgjewellers.com/",
-                "tooltipString": "open_website",
-                "faIcon": "fa-solid fa-link"
-              }
-            ],
-            "screenshots": [],
-            "screenshotsAspectRatio": "",
-            "youtubeVideo": ""
-          },
-          "locales": {
-            "en": {
-              "title": "BMG Jewellers – E-Commerce",
-              "text": "A modern jewellery e-commerce platform with product browsing, gold rate integration, secured checkout, and multi-category catalogue management.",
-              "tags": ["Next.js", "E-Commerce", "Jewellery"]
-            }
-          }
-        },
-        {
-          "id": 6,
-          "categoryId": "category_web",
-          "img": "images/pictures/portfolio-project-logo-5.png",
-          "faIcon": "",
-          "faIconColors": { "bg": "", "fill": "" },
-          "preview": {
-            "links": [
-              {
-                "href": "https://nkvairamaaligai.com/",
-                "tooltipString": "open_website",
-                "faIcon": "fa-solid fa-link"
-              }
-            ],
-            "screenshots": [],
-            "screenshotsAspectRatio": "",
-            "youtubeVideo": ""
-          },
-          "locales": {
-            "en": {
-              "title": "NK Viramaaligai",
-              "text": "A clean, elegant business website crafted for a jewellery and retail chain, showcasing collections, store details, and customer engagement features.",
-              "tags": ["WordPress", "Business", "Showcase"]
-            }
-          }
-        }
-      ]
-    }
-  ]
-};
-
-export default function Portfolio() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const [activeFilter, setActiveFilter] = useState("All");
-
-  // Extract data from JSON
-  const portfolioArticle = portfolioData.articles[0];
-  const portfolioItems = portfolioArticle.items;
-  const locales = portfolioArticle.locales.en;
-  const titleLocales = portfolioData.title.locales.en;
-
-  // Helper function to get appropriate icon based on category
-  const getIconForProject = (categoryId) => {
-    switch (categoryId) {
-      case "category_apps":
-        return <Smartphone className={`${isDark ? "text-green-400" : "text-green-700"}`} />;
-      case "category_web":
-        return <Globe className={`${isDark ? "text-green-400" : "text-green-700"}`} />;
-      default:
-        return <Globe className={`${isDark ? "text-green-400" : "text-green-700"}`} />;
-    }
-  };
-
-  // Helper function to get category label
-  const getCategoryLabel = (categoryId) => {
-    switch (categoryId) {
-      case "category_apps":
-        return "Apps";
-      case "category_web":
-        return "Web";
-      default:
-        return "Other";
-    }
-  };
-
-  // Helper function to get subcategory description
-  const getSubcategoryText = (project) => {
-    const tags = project.locales.en.tags;
-    if (tags.length > 0) {
-      return tags.map(tag => tag.toLowerCase()).join(", ");
-    }
-    return project.categoryId === "category_apps" ? "mobile application" : "web application";
-  };
-
-  // Build filters from JSON data
-  const filters = [
-    { 
-      id: "All", 
-      label: locales.category_all, 
-      count: portfolioItems.length 
+      year: "2018",
+      title: "Started My Journey",
+      description: "Began learning web development with HTML, CSS, and JavaScript",
     },
-    { 
-      id: "category_apps", 
-      label: locales.category_apps, 
-      count: portfolioItems.filter(p => p.categoryId === "category_apps").length 
+    {
+      year: "2019",
+      title: "First Professional Role",
+      description: "Joined as a junior developer, working on React projects",
     },
-    { 
-      id: "category_web", 
-      label: locales.category_web, 
-      count: portfolioItems.filter(p => p.categoryId === "category_web").length 
-    }
+    {
+      year: "2021",
+      title: "Senior Developer",
+      description: "Promoted to senior position, leading frontend teams and architecture",
+    },
+    {
+      year: "2023",
+      title: "Full-Stack Expertise",
+      description: "Expanded to full-stack development with Node.js and cloud platforms",
+    },
   ];
 
-  // Filter projects based on active filter
-  const filteredProjects = activeFilter === "All" 
-    ? portfolioItems.sort((a, b) => 
-        portfolioArticle.settings.order_items_sort === "asc" ? a.id - b.id : b.id - a.id
-      )
-    : portfolioItems
-        .filter(item => item.categoryId === activeFilter)
-        .sort((a, b) => 
-          portfolioArticle.settings.order_items_sort === "asc" ? a.id - b.id : b.id - a.id
-        );
-
   return (
-    <div
-      className={`min-h-screen py-16 transition-colors duration-300 ${
-        isDark ? "bg-background" : "bg-slate-100"
+    <section
+      id="about"
+      className={`py-20 transition-colors duration-300 ${
+        isDark
+          ? "bg-slate-800 border-b border-slate-700"
+          : "bg-white border-b border-slate-200"
       }`}
     >
-      <div className="container mx-auto px-6 md:px-12 max-w-6xl">
-        {/* HEADER */}
-        <p
-          className={`text-center text-sm mb-2 ${
-            isDark ? "text-green-400/70" : "text-green-700"
-          }`}
-        >
-          🚀 My Projects
-        </p>
-
-        <h1
-          className={`text-center font-mono font-bold text-4xl sm:text-5xl mb-6 ${
-            isDark ? "text-green-400" : "text-green-700"
-          }`}
-        >
-          {titleLocales.title_long_prefix} {titleLocales.title_long.replace("{{Portfolio}}", "Portfolio")}
-        </h1>
-
-        {/* FILTERS */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          {filters.map((filter) => (
-            <button
-              key={filter.id}
-              onClick={() => setActiveFilter(filter.id)}
-              className={`px-6 py-2 rounded-full font-medium text-sm transition-all duration-300 ${
-                activeFilter === filter.id
-                  ? isDark
-                    ? "bg-green-400 text-slate-900"
-                    : "bg-green-700 text-white"
-                  : isDark
-                  ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  : "bg-white text-slate-700 hover:bg-green-50 border border-green-200"
+      <div className="container mx-auto px-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Section Header */}
+          <div className="mb-16 text-center">
+            <h2
+              className={`text-4xl md:text-5xl font-bold mb-4 transition-colors duration-300 ${
+                isDark ? "text-white" : "text-slate-900"
               }`}
             >
-              {filter.label} ({filter.count})
-            </button>
-          ))}
-        </div>
-
-        {/* PROJECTS GRID */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className={`group rounded-xl overflow-hidden transition-all duration-300 ${
-                isDark
-                  ? "bg-slate-800/40 border border-slate-700 hover:border-green-400/30"
-                  : "bg-white border border-green-200 hover:border-green-700/50"
+              About Me
+            </h2>
+            <p
+              className={`text-lg transition-colors duration-300 ${
+                isDark ? "text-slate-400" : "text-slate-600"
               }`}
             >
-              {/* Project Header */}
-              <div className="p-8">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`p-3 rounded-lg ${
-                        isDark ? "bg-slate-900" : "bg-green-50"
-                      }`}
-                    >
-                      {getIconForProject(project.categoryId)}
-                    </div>
+              My journey as a developer and designer
+            </p>
+          </div>
+
+          {/* Content Grid */}
+          <div className="grid md:grid-cols-2 gap-12 mb-16">
+            {/* Introduction */}
+            <div className="space-y-4">
+              <p
+                className={`text-lg leading-relaxed transition-colors duration-300 ${
+                  isDark ? "text-slate-300" : "text-slate-700"
+                }`}
+              >
+                I'm a passionate full-stack developer and designer with over 5 years of
+                experience building modern web applications. My expertise spans across
+                frontend frameworks, backend technologies, and cloud platforms.
+              </p>
+              <p
+                className={`text-lg leading-relaxed transition-colors duration-300 ${
+                  isDark ? "text-slate-300" : "text-slate-700"
+                }`}
+              >
+                I specialize in creating scalable, performant, and user-friendly
+                applications. I'm driven by the challenge of solving complex problems and
+                the satisfaction of delivering high-quality solutions that users love.
+              </p>
+              <p
+                className={`text-lg leading-relaxed transition-colors duration-300 ${
+                  isDark ? "text-slate-300" : "text-slate-700"
+                }`}
+              >
+                Beyond coding, I'm passionate about mentoring junior developers,
+                contributing to open-source projects, and staying updated with the latest
+                industry trends.
+              </p>
+            </div>
+
+            {/* Key Points */}
+            <div className="space-y-4">
+              {[
+                {
+                  icon: "🎯",
+                  title: "Problem Solver",
+                  description: "Tackling complex challenges with creative solutions",
+                },
+                {
+                  icon: "🚀",
+                  title: "Innovation Focused",
+                  description: "Always exploring new technologies and methodologies",
+                },
+                {
+                  icon: "👥",
+                  title: "Team Player",
+                  description: "Collaborating effectively with diverse teams",
+                },
+                {
+                  icon: "📈",
+                  title: "Growth Mindset",
+                  description: "Continuously learning and improving my skills",
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className={`p-4 rounded-lg transition-all duration-300 ${
+                    isDark ? "bg-slate-700/50 hover:bg-slate-700" : "bg-slate-100 hover:bg-slate-200"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">{item.icon}</span>
                     <div>
                       <h3
-                        className={`text-xl font-mono font-semibold ${
-                          isDark ? "text-green-400" : "text-green-700"
+                        className={`font-semibold transition-colors duration-300 ${
+                          isDark ? "text-white" : "text-slate-900"
                         }`}
                       >
-                        {project.locales.en.title}
+                        {item.title}
                       </h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span
-                          className={`text-sm font-medium px-3 py-1 rounded-full ${
-                            isDark
-                              ? "bg-slate-900 text-green-400"
-                              : "bg-green-50 text-green-700"
-                          }`}
-                        >
-                          {getCategoryLabel(project.categoryId)}
-                        </span>
-                        <span className="text-sm text-slate-500">•</span>
-                        <span
-                          className={`text-sm ${
-                            isDark ? "text-slate-400" : "text-slate-600"
-                          }`}
-                        >
-                          {getSubcategoryText(project)}
-                        </span>
-                      </div>
+                      <p
+                        className={`text-sm transition-colors duration-300 ${
+                          isDark ? "text-slate-400" : "text-slate-600"
+                        }`}
+                      >
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Description */}
-                <p
-                  className={`mb-6 leading-relaxed ${
-                    isDark ? "text-slate-300" : "text-slate-700"
-                  }`}
-                >
-                  {project.locales.en.text}
-                </p>
+          {/* Timeline */}
+          <div className="mt-20">
+            <h3
+              className={`text-2xl font-bold mb-12 text-center transition-colors duration-300 ${
+                isDark ? "text-white" : "text-slate-900"
+              }`}
+            >
+              Professional Journey
+            </h3>
 
-                {/* Separator */}
-                <div
-                  className={`h-px mb-6 ${
-                    isDark ? "bg-slate-700" : "bg-green-200"
-                  }`}
-                ></div>
+            <div className="relative">
+              {/* Timeline line */}
+              <div
+                className={`absolute left-1/2 transform -translate-x-1/2 w-1 h-full transition-colors duration-300 ${
+                  isDark ? "bg-slate-700" : "bg-slate-300"
+                }`}
+              />
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {project.locales.en.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className={`px-3 py-1 text-xs font-medium rounded-full ${
-                        isDark
-                          ? "bg-slate-900 text-green-400 border border-slate-700"
-                          : "bg-green-50 text-green-700 border border-green-200"
-                      }`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-4">
-                  {/* Check if there are preview links */}
-                  {project.preview.links && project.preview.links.length > 0 ? (
-                    project.preview.links.map((link, index) => (
-                      <a
-                        key={index}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
-                          link.faIcon.includes("google-play")
-                            ? isDark
-                              ? "bg-green-400 text-slate-900 hover:bg-green-300"
-                              : "bg-green-700 text-white hover:bg-green-600"
-                            : isDark
-                            ? "bg-slate-900 text-green-400 hover:bg-slate-800"
-                            : "bg-green-50 text-green-700 hover:bg-green-100"
-                        }`}
-                        title={link.tooltipString}
-                      >
-                        {link.faIcon.includes("google-play") ? (
-                          <>
-                            <ExternalLink size={18} />
-                            View on Play Store
-                          </>
-                        ) : (
-                          <>
-                            <ExternalLink size={18} />
-                            Visit Website
-                          </>
-                        )}
-                      </a>
-                    ))
-                  ) : (
-                    <>
-                      <a
-                        href="#"
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+              {/* Timeline items */}
+              <div className="space-y-12">
+                {timeline.map((item, index) => (
+                  <div key={index} className={`flex gap-8 ${index % 2 === 0 ? "flex-row" : "flex-row-reverse"}`}>
+                    {/* Content */}
+                    <div className="w-1/2">
+                      <div
+                        className={`p-6 rounded-lg transition-all duration-300 ${
                           isDark
-                            ? "bg-slate-900 text-green-400 hover:bg-slate-800"
-                            : "bg-green-50 text-green-700 hover:bg-green-100"
+                            ? "bg-slate-700 hover:bg-slate-600"
+                            : "bg-slate-100 hover:bg-slate-200"
                         }`}
                       >
-                        <Github size={18} />
-                        Code
-                      </a>
-                      <a
-                        href="#"
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                        <p
+                          className={`text-sm font-semibold transition-colors duration-300 ${
+                            isDark ? "text-blue-400" : "text-blue-600"
+                          }`}
+                        >
+                          {item.year}
+                        </p>
+                        <h4
+                          className={`text-lg font-bold mt-2 transition-colors duration-300 ${
+                            isDark ? "text-white" : "text-slate-900"
+                          }`}
+                        >
+                          {item.title}
+                        </h4>
+                        <p
+                          className={`text-sm mt-2 transition-colors duration-300 ${
+                            isDark ? "text-slate-400" : "text-slate-600"
+                          }`}
+                        >
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Timeline dot */}
+                    <div className="w-0 flex justify-center">
+                      <div
+                        className={`w-4 h-4 rounded-full border-4 transition-colors duration-300 ${
                           isDark
-                            ? "bg-green-400 text-slate-900 hover:bg-green-300"
-                            : "bg-green-700 text-white hover:bg-green-600"
+                            ? "border-slate-800 bg-blue-500"
+                            : "border-white bg-blue-500"
                         }`}
-                      >
-                        <ExternalLink size={18} />
-                        Live Demo
-                      </a>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Hover Effect Background */}
-              <div
-                className={`h-1 w-0 group-hover:w-full transition-all duration-500 ${
-                  isDark ? "bg-green-400" : "bg-green-700"
-                }`}
-              ></div>
-            </div>
-          ))}
-        </div>
-
-        {/* STATS SECTION */}
-        <div className="mt-20">
-          <h2
-            className={`text-2xl font-mono font-semibold mb-8 flex items-center gap-2 ${
-              isDark ? "text-green-400" : "text-green-700"
-            }`}
-          >
-            <span className="h-6 w-1 bg-green-400 rounded-full"></span>
-            Project Stats
-          </h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div
-              className={`p-6 rounded-xl text-center ${
-                isDark
-                  ? "bg-slate-800/40 border border-slate-700"
-                  : "bg-white border border-green-200"
-              }`}
-            >
-              <div
-                className={`text-3xl font-bold mb-2 ${
-                  isDark ? "text-green-400" : "text-green-700"
-                }`}
-              >
-                {portfolioItems.length}
-              </div>
-              <div
-                className={`text-sm ${
-                  isDark ? "text-slate-400" : "text-slate-600"
-                }`}
-              >
-                Total Projects
-              </div>
-            </div>
-
-            <div
-              className={`p-6 rounded-xl text-center ${
-                isDark
-                  ? "bg-slate-800/40 border border-slate-700"
-                  : "bg-white border border-green-200"
-              }`}
-            >
-              <div
-                className={`text-3xl font-bold mb-2 ${
-                  isDark ? "text-green-400" : "text-green-700"
-                }`}
-              >
-                {portfolioItems.filter(p => p.categoryId === "category_apps").length}
-              </div>
-              <div
-                className={`text-sm ${
-                  isDark ? "text-slate-400" : "text-slate-600"
-                }`}
-              >
-                Mobile Apps
-              </div>
-            </div>
-
-            <div
-              className={`p-6 rounded-xl text-center ${
-                isDark
-                  ? "bg-slate-800/40 border border-slate-700"
-                  : "bg-white border border-green-200"
-              }`}
-            >
-              <div
-                className={`text-3xl font-bold mb-2 ${
-                  isDark ? "text-green-400" : "text-green-700"
-                }`}
-              >
-                {portfolioItems.filter(p => p.categoryId === "category_web").length}
-              </div>
-              <div
-                className={`text-sm ${
-                  isDark ? "text-slate-400" : "text-slate-600"
-                }`}
-              >
-                Web Projects
-              </div>
-            </div>
-
-            <div
-              className={`p-6 rounded-xl text-center ${
-                isDark
-                  ? "bg-slate-800/40 border border-slate-700"
-                  : "bg-white border border-green-200"
-              }`}
-            >
-              <div
-                className={`text-3xl font-bold mb-2 ${
-                  isDark ? "text-green-400" : "text-green-700"
-                }`}
-              >
-                100%
-              </div>
-              <div
-                className={`text-sm ${
-                  isDark ? "text-slate-400" : "text-slate-600"
-                }`}
-              >
-                Client Satisfaction
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
